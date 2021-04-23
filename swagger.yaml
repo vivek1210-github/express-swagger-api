@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: Express-Swagger API
+  description: Api developed for courses in express js with swagger ui
+  version: '1.0.0'
+  contact:
+    name: Refresh
+    url: /api-docs
+    email: vivek@test.com
+  license:
+    name: Apache.2.0
+    url: http://www.apache.com
+servers:
+  - url: http://localhost:5000
+    description: Localhost server with port 5000
+paths: 
+  # All Courses List
+  /api/v1/courses:
+    get:
+      tags:
+        - "Courses"
+      summary: Get courses list
+      description: Get all **Courses** List
+      operationId: getCoursesListV1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/CoursesList'
+    post:
+      tags:
+        - "Courses"
+      summary: Add new course in db
+      description: Add new course info in db
+      operationId: addCourseV1
+      requestBody: 
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Course'              
+      responses:
+        '200':
+          description: New course added
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Course"
+                
+  # Get single course by id
+  /api/v1/courses/{id}:
+    get:
+      tags:
+        - "Courses"
+      summary: Get single course by id
+      description: Get single **Course** by id
+      operationId: getCourseByIdV1
+      parameters:
+      - $ref: "#/components/parameters/CourseIdPathParam"
+      responses:
+        '200':
+          description: Found Course - Success
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Course"
+    put:
+      tags:
+        - "Courses"
+      summary: Update course by id
+      description: Update course by course id
+      operationId: updateCourseByIdV1
+      parameters:
+        - $ref: '#/components/parameters/CourseIdPathParam'
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+      responses:
+          '200':
+            description: Course Updated - Success
+            content:
+              application/json:
+                schema:
+                  $ref:  "#/components/schemas/Course"
+      # Delete Course by id path
+    delete:
+      summary: Delete course by id
+      description: Delete the course information based on provided course Id
+      tags:
+          - Courses
+      parameters:
+          - $ref:  "#/components/parameters/CourseIdPathParam" 
+      responses:
+          '200':
+              description: Course Deleted - Success
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/Course'
+
+
+                  
+components:
+  parameters:   
+    # id path param - course
+    CourseIdPathParam:
+      name: id
+      in: path
+      description: Course Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    # All courses list
+    CoursesList:
+      type: array
+      items:
+        $ref: '#components/schemas/Course'
+    # Get single course object       
+    Course:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            readOnly: true
+            description: Auto incremented field, no need to provide
+          name:
+            type: string
+            example: "Reactjs Course 2021"
+          description:
+            type: string
+            example: 'Complete begineer to advance guide for reactjs with redux'
+          price:
+            type: integer
+            format: int32
+            example: 400
+          isPublished:
+            type: boolean
+            default: true
+
+
+
+          
+
+   
+
+       
+
+
+
+
