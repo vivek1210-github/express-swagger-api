@@ -12,7 +12,7 @@ dotenv.config({path: './config/config.env'});
 
 connectDB();
 
-const coursesRouter = require('./routers/courses');
+const coursesRouter = require('./routes/courses');
 
 app.use(cors());
 
