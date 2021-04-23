@@ -1,9 +1,17 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
+const colors = require('colors');
+const dotenv = require('dotenv');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./swagger.yaml');
+const connectDB = require('./config/db');
+
+dotenv.config({path: './config/config.env'});
+
+connectDB();
+
 const coursesRouter = require('./routers/courses');
 
 app.use(cors());
@@ -17,5 +25,5 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Connected to express server at port ${PORT}`)
+  console.log(`Connected to express server at port ${PORT}`.inverse.green.bold)
 })

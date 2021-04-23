@@ -13,8 +13,8 @@ info:
 servers:
   - url: http://localhost:5000
     description: Localhost server with port 5000
-paths: 
-  # All Courses List
+paths:   
+# All Courses List
   /api/v1/courses:
     get:
       tags:
@@ -102,9 +102,7 @@ paths:
                 application/json:
                   schema:
                     $ref: '#/components/schemas/Course'
-
-
-                  
+               
 components:
   parameters:   
     # id path param - course
