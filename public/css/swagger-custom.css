@@ -1,0 +1,3 @@
+.swagger-ui .topbar { background: coral;  }
+.swagger-ui .topbar img { content: url("/images/logo.png") }
+.swagger-ui .topbar {content: "Online Courses"} 

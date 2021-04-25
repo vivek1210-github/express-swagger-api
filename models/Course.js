@@ -23,7 +23,13 @@ const CourseSchema = new mongoose.Schema({
   isPublished: {
     type: Boolean,
     default: true
+  },
+  category: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Category',
+    required: true
   }
+
 }, {
   timestamps: true
 })

@@ -1,0 +1,26 @@
+[
+	{
+		"name": "ReactJS",
+		"description": "React js category"
+	},
+	{
+		"name": "NodeJS",
+		"description": "Nodejs category"
+	},
+	{
+		"name": "GIT",
+		"description": "git, github category"
+	},
+	{
+		"name": "Deployment",
+		"description": "Docker, AWS, HEROKU category"
+	},
+	{
+		"name": "FullStack",
+		"description": "MERN, MEAN, PERN, MEVN category"
+	},
+	{
+		"name": "PHP",
+		"description": "PHP, Laravel, Wordpress category"
+	}
+]

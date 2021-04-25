@@ -2,18 +2,45 @@ openapi: 3.0.3
 info:
   title: Express-Swagger API
   description: Api developed for courses in express js with swagger ui
-  version: '1.0.0'
-  contact:
-    name: Refresh
-    url: /api-docs
-    email: vivek@test.com
-  license:
-    name: Apache.2.0
-    url: http://www.apache.com
+  version: '1.0.0' 
 servers:
   - url: http://localhost:5000
     description: Localhost server with port 5000
-paths:   
+paths: 
+  # Get All Categories
+  /api/v1/categories:
+    get:
+      tags:
+        - Categories
+      summary: Get Categories list
+      description: Get all **Categories** List
+      operationId: getAllCategoriesListV1
+      responses:
+         '200':
+            description: All Categories list - Success
+  # Delete Category by id
+  /api/v1/categories/{id}:
+    delete:
+      tags:
+        - Categories
+      summary: Delete category by id, This will also remove the courses related to the category
+      description: Deleting category by id **Note - This will also remove the courses related to the category**
+      operationId: deleteCategoryByIdV1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category Deleted - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+
 # All Courses List
   /api/v1/courses:
     get:
@@ -22,13 +49,34 @@ paths:
       summary: Get courses list
       description: Get all **Courses** List
       operationId: getCoursesListV1
+      parameters:
+        - name: page
+          in: query
+          description: Page no to start like 1, 2 for pagination          
+          schema:           
+            type: string 
+            default: 1
+        -  $ref: '#/components/parameters/PriceLteQueryParam'  
+        - name: price[gte]
+          in: query
+          description: Example -  500
+          schema:
+            type: integer
+            format: int32     
+        - name: sort
+          in: query
+          description: Sort by price asc, desc          
+          schema:
+            type: string
+            enum: [asc, desc]  
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/CoursesList'
+                $ref: '#components/schemas/SuccessResponseWithArray'
+   # Create new course
     post:
       tags:
         - "Courses"
@@ -47,7 +95,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref:  "#/components/schemas/Course"
+                $ref:  "#/components/schemas/SuccessResponse"
                 
   # Get single course by id
   /api/v1/courses/{id}:
@@ -65,7 +113,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref:  "#/components/schemas/Course"
+                $ref:  "#/components/schemas/SuccessResponse"
+        '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    # Update course path
     put:
       tags:
         - "Courses"
@@ -86,7 +141,7 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref:  "#/components/schemas/Course"
+                  $ref:  "#/components/schemas/SuccessResponse"
       # Delete Course by id path
     delete:
       summary: Delete course by id
@@ -101,10 +156,19 @@ paths:
               content:
                 application/json:
                   schema:
-                    $ref: '#/components/schemas/Course'
+                    $ref: '#/components/schemas/DeleteResponse'
                
 components:
   parameters:   
+    # Price less than parameter - querystring parameter
+    PriceLteQueryParam:
+      name: price[lte]
+      in: query
+      required: false
+      description: Enter price to get records less than entered price
+      schema:
+        type: integer
+        format: int32
     # id path param - course
     CourseIdPathParam:
       name: id
@@ -112,36 +176,78 @@ components:
       description: Course Id
       required: true
       schema:
-        type: string
-        format: uuid
+        type: string        
   schemas:
+    # Error Response:
+    ErrorResponse:
+        type: object
+        properties:
+          success:
+            type: boolean
+            default: false
+          error:
+            type: string
+    # Success Response
+    SuccessResponse:     
+            type: object
+            properties:
+                success:
+                  type: boolean
+                  default: true
+                data:
+                  type: object                 
+                  $ref: '#/components/schemas/Course'
+    # Success Response to return multiple courses list 
+    SuccessResponseWithArray:
+      type: object
+      properties:
+          success:
+            type: boolean
+            default: true
+          data:
+            type: array
+            items:
+               $ref: '#/components/schemas/Course'
+    # Delete Response 
+    DeleteResponse:
+        type: object
+        properties:
+          success:
+            type: boolean
+            default: true
+          data:
+            type: object
+
     # All courses list
     CoursesList:
       type: array
       items:
-        $ref: '#components/schemas/Course'
+        $ref: '#/components/schemas/Course'
     # Get single course object       
     Course:
         type: object
         properties:
           id:
             type: string
-            format: uuid
+            example: '123abc'            
             readOnly: true
             description: Auto incremented field, no need to provide
           name:
             type: string
-            example: "Reactjs Course 2021"
+            example: "example course"
           description:
             type: string
-            example: 'Complete begineer to advance guide for reactjs with redux'
+            example: 'example course description'
           price:
             type: integer
             format: int32
-            example: 400
+            default: 300           
           isPublished:
             type: boolean
             default: true
+          category:
+            type: string
+          
 
 
 
